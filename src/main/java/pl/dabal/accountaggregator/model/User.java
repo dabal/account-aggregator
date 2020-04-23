@@ -10,32 +10,74 @@ import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-@Entity
-@Getter
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static java.util.Objects.requireNonNull;
+
+@Value
+@Builder
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name="users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
+@Getter
+//@NoArgsConstructor
+public class User implements UserDetails {
 
-    @NotNull
-    @NotBlank
-    @Size(min = 3, max = 30)
-    private String name;
 
-    @NotBlank
-    @NotNull
-    @UniqueElements
-    @Email
-    @Size(min=3)
-    private String username;
+    String id;
+    String username;
+    String password;
 
-    @NotNull
-    @NotBlank
-    @Pattern(regexp = "^[a-z][a-z|A-Z]{1,5}\\d+[a-z|A-Z|\\d]+$")
-    private String password;
+    @JsonCreator
+    User(@JsonProperty("id") final String id,
+         @JsonProperty("username") final String username,
+         @JsonProperty("password") final String password) {
+        super();
+        this.id = id;
+        this.username = requireNonNull(username);
+        this.password = requireNonNull(password);
+    }
+
+    @JsonIgnore
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        return new ArrayList<>();
+    }
+
+    @JsonIgnore
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }
