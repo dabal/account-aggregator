@@ -1,7 +1,8 @@
-package pl.dabal.accountaggregator.model;
+package pl.dabal.accountaggregator.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import pl.dabal.accountaggregator.validators.UniqueEmail;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -28,6 +29,7 @@ public class UserDto {
     @NotNull
     @NotBlank
     @Email
+    @UniqueEmail
     private String email;
 
     @NotNull

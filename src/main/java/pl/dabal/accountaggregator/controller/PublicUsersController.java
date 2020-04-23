@@ -6,13 +6,14 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import pl.dabal.accountaggregator.model.User;
-import pl.dabal.accountaggregator.model.UserDto;
+import pl.dabal.accountaggregator.model.dto.CredentialsDto;
+import pl.dabal.accountaggregator.model.dto.TokenDto;
+import pl.dabal.accountaggregator.model.dto.UserDto;
 import pl.dabal.accountaggregator.repository.UserRepository;
 import pl.dabal.accountaggregator.service.UserAuthenticationService;
 
 
 import javax.validation.Valid;
-import java.util.UUID;
 
 import static lombok.AccessLevel.PACKAGE;
 import static lombok.AccessLevel.PRIVATE;
@@ -28,7 +29,7 @@ final class PublicUsersController {
   UserRepository users;
 
   @PostMapping("/register")
-  String register(
+  TokenDto register(
           @RequestBody @Valid UserDto userDto) {
     log.debug(userDto.toString());
     users
@@ -42,15 +43,16 @@ final class PublicUsersController {
           .build()
       );
 
-    return login(userDto);
+    //return login(userDto);
+    return login(new CredentialsDto(userDto.getEmail(), userDto.getPassword()));
   }
 
 
   @PostMapping("/login")
-  String login(
-          @RequestBody UserDto userDto) {
-    return authentication
-      .login(userDto.getEmail(), userDto.getPassword())
-      .orElseThrow(() -> new RuntimeException("invalid login and/or password"));
+  TokenDto login(
+          @RequestBody @Valid CredentialsDto credentialsDTO) {
+    return new TokenDto(authentication
+      .login(credentialsDTO.getEmail(), credentialsDTO.getPassword())
+      .orElseThrow(() -> new RuntimeException("invalid login and/or password")));
   }
 }
