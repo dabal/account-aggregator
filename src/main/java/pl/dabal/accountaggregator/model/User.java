@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -56,6 +57,9 @@ public class User implements UserDetails {
 
     @JsonIgnore
     private String token;
+
+//    @OneToMany(mappedBy = "user")
+//    private List<Consent> consents;
 
 
 
