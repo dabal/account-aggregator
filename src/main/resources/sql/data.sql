@@ -1,0 +1,1 @@
+insert into users(name , password, username) values('nazwa uzytkownika', 'tajne1Haslo', 'user@test.pl');
