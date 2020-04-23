@@ -1,9 +1,6 @@
 package pl.dabal.accountaggregator.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import org.hibernate.validator.constraints.UniqueElements;
 
@@ -13,8 +10,6 @@ import javax.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -23,27 +18,46 @@ import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 
-@Value
 @Builder
 @Setter
 @Getter
-//@NoArgsConstructor
+//@RequiredArgsConstructor
+@ToString
+@NoArgsConstructor
+@Entity
+@AllArgsConstructor
+@Table(name = "users")
 public class User implements UserDetails {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    String id;
-    String username;
-    String password;
+    @NotNull
+    @NotBlank
+    @Size(min=1,max=50)
+    private String firstName;
 
-    @JsonCreator
-    User(@JsonProperty("id") final String id,
-         @JsonProperty("username") final String username,
-         @JsonProperty("password") final String password) {
-        super();
-        this.id = id;
-        this.username = requireNonNull(username);
-        this.password = requireNonNull(password);
-    }
+    @NotNull
+    @NotBlank
+    @Size(min=1,max=50)
+    private String lastName;
+
+    @NotNull
+    @NotBlank
+    @Email
+    private String email;
+
+    @NotNull
+    @NotBlank
+    @Size(min=4, max=15)
+    @JsonIgnore
+    private String password;
+
+    @JsonIgnore
+    private String token;
+
+
 
     @JsonIgnore
     @Override
@@ -55,6 +69,11 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @JsonIgnore

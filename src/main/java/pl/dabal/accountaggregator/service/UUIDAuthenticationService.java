@@ -4,8 +4,10 @@ package pl.dabal.accountaggregator.service;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.model.User;
+import pl.dabal.accountaggregator.repository.UserRepository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,25 +20,26 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 final class UUIDAuthenticationService implements UserAuthenticationService {
   @NonNull
-  UserCrudService users;
+  UserRepository users;
 
   @Override
-  public Optional<String> login(final String username, final String password) {
+  public Optional<String> login(final String email, final String password) {
     final String uuid = UUID.randomUUID().toString();
-    final User user = User
-      .builder()
-      .id(uuid)
-      .username(username)
-      .password(password)
-      .build();
+    final User user =users.findByEmail(email).orElseThrow(() -> new RuntimeException("invalid login and/or password"));
+if(user.getPassword().equals(password)){
+  user.setToken(uuid);
+  users.save(user);
+}
+else{
+  throw new RuntimeException("invalid login and/or password");
+}
 
-    users.save(user);
     return Optional.of(uuid);
   }
 
   @Override
   public Optional<User> findByToken(final String token) {
-    return users.find(token);
+    return users.findByToken(token);
   }
 
   @Override
