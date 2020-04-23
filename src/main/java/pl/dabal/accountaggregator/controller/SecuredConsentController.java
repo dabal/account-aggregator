@@ -30,7 +30,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("/public/users")
+@RequestMapping("/consents")
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 final class SecuredConsentController {
 
@@ -41,10 +41,10 @@ public  SecuredConsentController(ConsentGetOAuthLinkService consentGetOAuthLinkS
   }
 
   @GetMapping("/add")
-  public OAuthLink createConsent() {
+  public OAuthLink createConsent(@AuthenticationPrincipal User user) {
   String link=null;
-  try{
-      link=consentGetOAuthLinkService.createConsent();
+    try{
+      link=consentGetOAuthLinkService.createConsent(user);
     } catch (IOException e) {
     e.printStackTrace();
   } catch (NoSuchAlgorithmException e) {

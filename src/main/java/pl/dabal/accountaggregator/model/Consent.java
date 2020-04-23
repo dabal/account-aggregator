@@ -1,9 +1,6 @@
 package pl.dabal.accountaggregator.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +13,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Consent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +21,9 @@ public class Consent {
 
     @NotNull
     @NotBlank
-    @Size(min=1,max=50)
-    private String firstName;
+    private String name;
 
-//    @ManyToOne
-//    private User user;
+    @ManyToOne
+    private User user;
 
 }

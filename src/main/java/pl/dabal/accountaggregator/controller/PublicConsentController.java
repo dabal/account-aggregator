@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("/public/user")
+@RequestMapping("/public/consent")
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 final class PublicConsentController {
 

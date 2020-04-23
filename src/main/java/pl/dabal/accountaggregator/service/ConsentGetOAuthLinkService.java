@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.dabal.accountaggregator.model.Consent;
+import pl.dabal.accountaggregator.model.User;
+import pl.dabal.accountaggregator.repository.ConsentRepository;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
@@ -26,7 +30,14 @@ public class ConsentGetOAuthLinkService {
     private static final String CLIENT_ID="239c108f-7713-4995-a2df-9d056d4e31b5";
     private static final String CLIENT_SECRET="tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
 
-    public String  createConsent() throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
+    private ConsentRepository consentRepository;
+
+    @Autowired
+    public ConsentGetOAuthLinkService(ConsentRepository consentRepository){
+        this.consentRepository=consentRepository;
+    }
+
+    public String  createConsent(User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
            HttpClient client = HttpClient.newBuilder()
                 // .sslContext(sslContext)
@@ -60,6 +71,7 @@ public class ConsentGetOAuthLinkService {
         log.debug(jsonObject.toJSONString());
 
         String aspspRedirectUri = (String) jsonObject.get("aspspRedirectUri");
+consentRepository.save(Consent.builder().name(uuid).user(user).build());
         return (aspspRedirectUri);
     }
 
@@ -80,7 +92,7 @@ public class ConsentGetOAuthLinkService {
                 "    }," +
                 "    \"response_type\": \"code\"," +
                 "    \"client_id\": \"%s\"," +
-                "    \"redirect_uri\": \"http://localhost:8080/public/user/redirect\"," +
+                "    \"redirect_uri\": \"http://localhost:8080/public/consent/redirect\"," +
                 "    \"scope\": \"ais\"," +
                 "    \"scope_details\": {" +
                 "        \"privilegeList\": [" +
