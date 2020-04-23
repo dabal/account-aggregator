@@ -31,21 +31,23 @@ public class ConsentGetOAuthLinkService {
     private static final String CLIENT_SECRET="tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
 
     private ConsentRepository consentRepository;
+    private HttpClient httpClient;
 
     @Autowired
-    public ConsentGetOAuthLinkService(ConsentRepository consentRepository){
+    public ConsentGetOAuthLinkService(ConsentRepository consentRepository, HttpClient httpClient){
         this.consentRepository=consentRepository;
+        this.httpClient=httpClient;
     }
 
     public String  createConsent(User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
-           HttpClient client = HttpClient.newBuilder()
+        /*   HttpClient client = HttpClient.newBuilder()
                 // .sslContext(sslContext)
                 .version(HttpClient.Version.HTTP_1_1)
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 //.proxy(ProxySelector.of(new InetSocketAddress("localhost", 5555)))
                 //.authenticator(Authenticator.getDefault())
-                .build();
+                .build();*/
         String body = getConsentCreateJSON(uuid);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://gateway.developer.aliorbank.pl/openapipl/sb/v2_1_1.1/auth/v2_1_1.1/authorize"))
@@ -61,7 +63,7 @@ public class ConsentGetOAuthLinkService {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
         HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString(Charset.forName("utf-8")));//.ofString());
+                httpClient.send(request, HttpResponse.BodyHandlers.ofString(Charset.forName("utf-8")));//.ofString());
         log.debug(String.valueOf(response.statusCode()));
         log.debug(response.headers().map().toString());
         //     response.
