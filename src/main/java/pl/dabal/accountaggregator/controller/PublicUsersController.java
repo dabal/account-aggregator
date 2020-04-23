@@ -11,6 +11,7 @@ import pl.dabal.accountaggregator.repository.UserRepository;
 import pl.dabal.accountaggregator.service.UserAuthenticationService;
 
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 import static lombok.AccessLevel.PACKAGE;
@@ -28,7 +29,7 @@ final class PublicUsersController {
 
   @PostMapping("/register")
   String register(
-          @RequestBody UserDto userDto) {
+          @RequestBody @Valid UserDto userDto) {
     log.debug(userDto.toString());
     users
       .save(

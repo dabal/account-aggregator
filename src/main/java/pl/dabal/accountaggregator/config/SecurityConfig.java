@@ -84,7 +84,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
   Filter restAuthenticationFilter() throws Exception {
     final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
     filter.setAuthenticationManager(authenticationManager());
-    filter.setAuthenticationSuccessHandler(successHandler());
+    //filter.setAuthenticationSuccessHandler(successHandler());
+    //filter.setAuthenticationFailureHandler();
     return filter;
   }
 

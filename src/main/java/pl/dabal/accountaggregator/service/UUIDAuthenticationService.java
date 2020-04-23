@@ -25,13 +25,13 @@ final class UUIDAuthenticationService implements UserAuthenticationService {
   @Override
   public Optional<String> login(final String email, final String password) {
     final String uuid = UUID.randomUUID().toString();
-    final User user =users.findByEmail(email).orElseThrow(() -> new RuntimeException("invalid login and/or password"));
+    final User user =users.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("invalid login and/or password"));
 if(user.getPassword().equals(password)){
   user.setToken(uuid);
   users.save(user);
 }
 else{
-  throw new RuntimeException("invalid login and/or password");
+  throw new UsernameNotFoundException("invalid login and/or password");
 }
 
     return Optional.of(uuid);
@@ -43,7 +43,8 @@ else{
   }
 
   @Override
-  public void logout(final User user) {
+  public void logout(User user) {
+    //User user=findByToken()
 
   }
 }
