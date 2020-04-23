@@ -111,12 +111,12 @@ public class ConsentGetOAuthLinkService {
                 "            }" +
                 "        ]," +
                 "        \"scopeGroupType\": \"ais\"," +
-                "        \"consentId\": \"1539087005646848\"," +
+                "        \"consentId\": \"%s\"," +
                 "        \"scopeTimeLimit\": \"2020-05-02T16:31:03.848Z\"," +
                 "        \"throttlingPolicy\": \"psd2Regulatory\"" +
                 "    }," +
                 "    \"state\": \"your state\"" +
-                "}",uuid,CLIENT_ID);
+                "}",uuid,CLIENT_ID, uuid);
         log.debug("REQUEST: "+request);
         return request;
     }}
