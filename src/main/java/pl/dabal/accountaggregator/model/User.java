@@ -51,7 +51,6 @@ public class User implements UserDetails {
 
     @NotNull
     @NotBlank
-    @Size(min=4, max=15)
     @JsonIgnore
     private String password;
 

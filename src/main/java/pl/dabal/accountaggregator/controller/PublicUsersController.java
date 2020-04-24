@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pl.dabal.accountaggregator.model.User;
 import pl.dabal.accountaggregator.model.dto.CredentialsDto;
@@ -28,6 +29,8 @@ final class PublicUsersController {
   @NonNull
   UserRepository users;
 
+  PasswordEncoder passwordEncoder;
+
   @PostMapping("/register")
   TokenDto register(
           @RequestBody @Valid UserDto userDto) {
@@ -38,7 +41,7 @@ final class PublicUsersController {
           .builder()
           .lastName(userDto.getLastName())
           .firstName(userDto.getFirstName())
-          .password(userDto.getPassword())
+          .password(passwordEncoder.encode(userDto.getPassword()))
           .email(userDto.getEmail())
           .build()
       );
