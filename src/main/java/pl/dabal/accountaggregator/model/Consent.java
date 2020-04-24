@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name="consents")
@@ -29,5 +30,8 @@ public class Consent {
 
     @ManyToOne
     private User user;
+
+    @OneToMany(mappedBy = "consent", fetch = FetchType.EAGER)
+    private List<Account> accounts;
 
 }
