@@ -33,10 +33,13 @@ final class PublicConsentController {
 
 
   @GetMapping("/redirect")
-  public String retrieveOauthToken(@RequestParam String code, @RequestParam String state) {
+  public void retrieveOauthToken(@RequestParam String code, @RequestParam String state) {
     String token=null;
     try {
-    token=  consentGetAuthTokenService.getAuth(code,state);
+    //token=  consentGetAuthTokenService.getAuth(code,state);
+      consentGetAuthTokenService.getAuth(code,state);
+
+
     } catch (IOException e) {
       e.printStackTrace();
     } catch (InterruptedException e) {
@@ -48,7 +51,7 @@ final class PublicConsentController {
     } catch (ParseException e) {
       e.printStackTrace();
     }
-    return token;
+//    return token;
   }
 
 

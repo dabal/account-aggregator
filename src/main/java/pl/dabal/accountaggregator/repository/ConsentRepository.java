@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface ConsentRepository extends JpaRepository<Consent, Long> {
 public Optional<Consent> findByState(String state);
+    public Optional<Consent> findByName(String name);
 }
 

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
+import static javax.persistence.CascadeType.REMOVE;
 
 @Builder
 @Setter
@@ -57,7 +58,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String token;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER,cascade=REMOVE)
    private List<Consent> consents;
 
 

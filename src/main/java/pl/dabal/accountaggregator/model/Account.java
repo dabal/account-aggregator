@@ -1,5 +1,6 @@
 package pl.dabal.accountaggregator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class Account {
 
 
     private String accountNumber;
-
+@JsonIgnore
     @ManyToOne
     private Consent consent;
 

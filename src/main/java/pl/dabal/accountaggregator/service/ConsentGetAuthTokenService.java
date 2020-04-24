@@ -2,6 +2,7 @@ package pl.dabal.accountaggregator.service;
 
 import com.fasterxml.uuid.Generators;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.model.Consent;
 import pl.dabal.accountaggregator.model.User;
+import pl.dabal.accountaggregator.repository.AccountRepository;
 import pl.dabal.accountaggregator.repository.ConsentRepository;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
+import java.util.Iterator;
 
 @Slf4j
 @Service
@@ -28,15 +31,17 @@ public class ConsentGetAuthTokenService {
     private static final String CLIENT_SECRET="tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
 
     private ConsentRepository consentRepository;
+    private AccountService accountService;
     private HttpClient httpClient;
 
     @Autowired
-    public ConsentGetAuthTokenService(ConsentRepository consentRepository, HttpClient httpClient){
+    public ConsentGetAuthTokenService(ConsentRepository consentRepository, HttpClient httpClient, AccountService accountService){
         this.consentRepository=consentRepository;
         this.httpClient=httpClient;
+        this.accountService=accountService;
     }
 
-    public String  getAuth(String code, String state) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
+    public void  getAuth(String code, String state) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
 
         String body = getTokenJSON(uuid, state, code);
@@ -62,10 +67,18 @@ public class ConsentGetAuthTokenService {
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(response.body());
         log.debug(jsonObject.toJSONString());
+        Consent consent=consentRepository.findByState(state).orElseThrow(()->new IllegalArgumentException());
+        JSONArray privilegeList = (JSONArray)((JSONObject) jsonObject.get("scope_details")).get("privilegeList");
+        Iterator objIter = privilegeList.iterator();
+        while (objIter.hasNext()) {
+            JSONObject json=(JSONObject)objIter.next();
+            String accountNumber=(String)json.get("accountNumber");
+           accountService.addAccount(accountNumber,consent);
 
-        String aspspRedirectUri = (String) jsonObject.get("aspspRedirectUri");
-Consent consent=consentRepository.findByState(state).orElseThrow(()->new IllegalArgumentException());
-        return (response.body());
+        }
+
+
+//        return (response.body());
     }
 
     private String getTokenJSON(String uuid, String state, String code) {
