@@ -57,7 +57,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String token;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
    private List<Consent> consents;
 
 

@@ -26,6 +26,9 @@ import pl.dabal.accountaggregator.providers.TokenAuthenticationProvider;
 
 import javax.servlet.Filter;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -37,11 +40,13 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-    new AntPathRequestMatcher("/public/**")
+
+          new AntPathRequestMatcher("/public/**")
   );
   private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
   TokenAuthenticationProvider provider;
+
 
   SecurityConfig(final TokenAuthenticationProvider provider) {
     super();
@@ -55,14 +60,33 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(final WebSecurity web) {
-    web.ignoring().requestMatchers(PUBLIC_URLS);
+   // web.ignoring().requestMatchers(PUBLIC_URLS);
+    web.ignoring().antMatchers("/v2/api-docs",
+            "/configuration/ui",
+            "/swagger-resources/**",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**");
+    // Allow swagger to be accessed without authentication
+//    web.ignoring().antMatchers("/v2/api-docs")
+//            .antMatchers("/swagger-resources/**")
+//            .antMatchers("/swagger-ui.html")//
+//            .antMatchers("/configuration/**")//
+//            .antMatchers("/webjars/**")//
+//            .antMatchers("/front/**")//
+//            .antMatchers("/assets/**")//
+//            .antMatchers("/public")
   }
+
+
 
   @Override
   protected void configure(final HttpSecurity http) throws Exception {
-    http
+       http
       .sessionManagement()
       .sessionCreationPolicy(STATELESS)
+//    .and().authorizeRequests()//
+//            .antMatchers("/").permitAll()//
       .and()
       .exceptionHandling()
       // this entry point handles when you request a protected page and you are not yet
