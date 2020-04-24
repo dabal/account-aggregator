@@ -41,14 +41,9 @@ public class ConsentGetOAuthLinkService {
 
     public String  createConsent(User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
-        /*   HttpClient client = HttpClient.newBuilder()
-                // .sslContext(sslContext)
-                .version(HttpClient.Version.HTTP_1_1)
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                //.proxy(ProxySelector.of(new InetSocketAddress("localhost", 5555)))
-                //.authenticator(Authenticator.getDefault())
-                .build();*/
-        String body = getConsentCreateJSON(uuid);
+        String state = Generators.timeBasedGenerator().generate().toString();
+
+        String body = getConsentCreateJSON(uuid, state);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://gateway.developer.aliorbank.pl/openapipl/sb/v2_1_1.1/auth/v2_1_1.1/authorize"))
                 .timeout(Duration.ofMinutes(1))
@@ -73,11 +68,11 @@ public class ConsentGetOAuthLinkService {
         log.debug(jsonObject.toJSONString());
 
         String aspspRedirectUri = (String) jsonObject.get("aspspRedirectUri");
-consentRepository.save(Consent.builder().name(uuid).user(user).build());
+consentRepository.save(Consent.builder().name(uuid).user(user).state(state).build());
         return (aspspRedirectUri);
     }
 
-    private String getConsentCreateJSON(String uuid) {
+    private String getConsentCreateJSON(String uuid, String state) {
 
         String request= String.format("{" +
                 "    \"requestHeader\": {" +
@@ -129,8 +124,8 @@ consentRepository.save(Consent.builder().name(uuid).user(user).build());
                 "        \"scopeTimeLimit\": \"2020-05-02T16:31:03.848Z\"," +
                 "        \"throttlingPolicy\": \"psd2Regulatory\"" +
                 "    }," +
-                "    \"state\": \"your state\"" +
-                "}",uuid,CLIENT_ID, uuid);
+                "    \"state\": \"%s\"" +
+                "}",uuid,CLIENT_ID, uuid, state);
         log.debug("REQUEST: "+request);
         return request;
     }}

@@ -23,6 +23,10 @@ public class Consent {
     @NotBlank
     private String name;
 
+    @NotNull
+    @NotBlank
+    private String state;
+
     @ManyToOne
     private User user;
 
