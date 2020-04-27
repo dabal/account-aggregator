@@ -1,6 +1,7 @@
 package pl.dabal.accountaggregator.service;
 
 import com.fasterxml.uuid.Generators;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -8,6 +9,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.dabal.accountaggregator.config.AliorProperties;
 import pl.dabal.accountaggregator.model.Consent;
 import pl.dabal.accountaggregator.model.User;
 import pl.dabal.accountaggregator.repository.AccountRepository;
@@ -26,6 +28,7 @@ import java.util.Iterator;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class ConsentGetAuthTokenService {
     private static final String CLIENT_ID="239c108f-7713-4995-a2df-9d056d4e31b5";
     private static final String CLIENT_SECRET="tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
@@ -33,13 +36,8 @@ public class ConsentGetAuthTokenService {
     private ConsentRepository consentRepository;
     private AccountService accountService;
     private HttpClient httpClient;
+    private AliorProperties aliorProperties;
 
-    @Autowired
-    public ConsentGetAuthTokenService(ConsentRepository consentRepository, HttpClient httpClient, AccountService accountService){
-        this.consentRepository=consentRepository;
-        this.httpClient=httpClient;
-        this.accountService=accountService;
-    }
 
     public void  getAuth(String code, String state) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
@@ -49,8 +47,8 @@ public class ConsentGetAuthTokenService {
                 .uri(URI.create("https://gateway.developer.aliorbank.pl/openapipl/sb/v2_1_1.1/auth/v2_1_1.1/token"))
                 .timeout(Duration.ofMinutes(1))
                 .header("Content-Type", "application/json")
-                .header("x-ibm-client-id", CLIENT_ID)
-                .header("x-ibm-client-secret", CLIENT_SECRET)
+                .header("x-ibm-client-id", aliorProperties.getClientId())
+                .header("x-ibm-client-secret", aliorProperties.getClientSecret())
                 .header("x-jws-signature", "")
                 .header("x-request-id", uuid)
                 .header("Accept-Charset", "utf-8")
@@ -138,7 +136,7 @@ public class ConsentGetAuthTokenService {
                 "    \"is_user_session\": false,\n" +
                 "    \"state\": \"your state\"\n" +
                 "   \n" +
-                "}",uuid,code, uuid,CLIENT_ID, state);
+                "}",uuid,code, uuid,aliorProperties.getClientId(), state);
         log.debug("REQUEST: "+request);
         return request;
     }}

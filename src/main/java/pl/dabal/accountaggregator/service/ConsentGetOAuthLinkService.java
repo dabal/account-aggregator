@@ -1,12 +1,14 @@
 package pl.dabal.accountaggregator.service;
 
 import com.fasterxml.uuid.Generators;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.dabal.accountaggregator.config.AliorProperties;
 import pl.dabal.accountaggregator.model.Consent;
 import pl.dabal.accountaggregator.model.User;
 import pl.dabal.accountaggregator.repository.ConsentRepository;
@@ -26,20 +28,17 @@ import java.time.Duration;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class ConsentGetOAuthLinkService {
-    private static final String CLIENT_ID="239c108f-7713-4995-a2df-9d056d4e31b5";
-    private static final String CLIENT_SECRET="tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
+    private static final String CLIENT_ID = "239c108f-7713-4995-a2df-9d056d4e31b5";
+    private static final String CLIENT_SECRET = "tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
 
     private ConsentRepository consentRepository;
     private HttpClient httpClient;
+    private AliorProperties aliorProperties;
 
-    @Autowired
-    public ConsentGetOAuthLinkService(ConsentRepository consentRepository, HttpClient httpClient){
-        this.consentRepository=consentRepository;
-        this.httpClient=httpClient;
-    }
 
-    public String  createConsent(User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
+    public String createConsent(User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
         String state = Generators.timeBasedGenerator().generate().toString();
 
@@ -48,8 +47,8 @@ public class ConsentGetOAuthLinkService {
                 .uri(URI.create("https://gateway.developer.aliorbank.pl/openapipl/sb/v2_1_1.1/auth/v2_1_1.1/authorize"))
                 .timeout(Duration.ofMinutes(1))
                 .header("Content-Type", "application/json")
-                .header("x-ibm-client-id", CLIENT_ID)
-                .header("x-ibm-client-secret", CLIENT_SECRET)
+                .header("x-ibm-client-id", aliorProperties.getClientId())
+                .header("x-ibm-client-secret", aliorProperties.getClientSecret())
                 .header("x-jws-signature", "")
                 .header("x-request-id", uuid)
                 .header("Accept-Charset", "utf-8")
@@ -68,13 +67,13 @@ public class ConsentGetOAuthLinkService {
         log.debug(jsonObject.toJSONString());
 
         String aspspRedirectUri = (String) jsonObject.get("aspspRedirectUri");
-consentRepository.save(Consent.builder().name(uuid).user(user).state(state).build());
+        consentRepository.save(Consent.builder().name(uuid).user(user).state(state).build());
         return (aspspRedirectUri);
     }
 
     private String getConsentCreateJSON(String uuid, String state) {
 
-        String request= String.format("{" +
+        String request = String.format("{" +
                 "    \"requestHeader\": {" +
                 "        \"requestId\": \"%s\"," +
                 "        \"userAgent\": \"61\"," +
@@ -125,7 +124,8 @@ consentRepository.save(Consent.builder().name(uuid).user(user).state(state).buil
                 "        \"throttlingPolicy\": \"psd2Regulatory\"" +
                 "    }," +
                 "    \"state\": \"%s\"" +
-                "}",uuid,CLIENT_ID, uuid, state);
-        log.debug("REQUEST: "+request);
+                "}", uuid, aliorProperties.getClientId(), uuid, state);
+        log.debug("REQUEST: " + request);
         return request;
-    }}
+    }
+}
