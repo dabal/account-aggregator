@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.dabal.accountaggregator.model.dto.OAuthLink;
 import pl.dabal.accountaggregator.service.ConsentGetAuthTokenService;
+import pl.dabal.accountaggregator.service.ConsentGetAuthTokenServiceImplHttpClient;
 import pl.dabal.accountaggregator.service.ConsentGetOAuthLinkService;
+import pl.dabal.accountaggregator.service.ConsentGetOAuthLinkServiceImplHttpClient;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -26,7 +27,7 @@ final class PublicConsentController {
   ConsentGetOAuthLinkService consentGetOAuthLinkService;
   ConsentGetAuthTokenService consentGetAuthTokenService;
 
-  public PublicConsentController(ConsentGetOAuthLinkService consentGetOAuthLinkService, ConsentGetAuthTokenService consentGetAuthTokenService) {
+  public PublicConsentController(ConsentGetOAuthLinkServiceImplHttpClient consentGetOAuthLinkService, ConsentGetAuthTokenServiceImplHttpClient consentGetAuthTokenService) {
     this.consentGetOAuthLinkService = consentGetOAuthLinkService;
     this.consentGetAuthTokenService = consentGetAuthTokenService;
   }
