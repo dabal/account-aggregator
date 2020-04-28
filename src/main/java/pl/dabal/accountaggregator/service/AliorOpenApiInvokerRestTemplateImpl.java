@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.dabal.accountaggregator.config.AliorProperties;
@@ -37,7 +38,12 @@ public class AliorOpenApiInvokerRestTemplateImpl implements AliorOpenApiInvoker 
     @Override
     public String invoke(User user, String requestId, Object json) {
 
+
+
         RestTemplate restTemplate = new RestTemplate();
+
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("x-ibm-client-id", aliorProperties.getClientId());
