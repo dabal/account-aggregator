@@ -22,4 +22,37 @@ public class AliorProperties {
     @NotBlank
     private String clientId;
 
+    @NotNull
+    @NotBlank
+    private String    userAgent;
+
+    @NotNull
+    @NotBlank
+    private String tppId;
+
+    @NotNull
+    @NotBlank
+    private String psuIdentifierType;
+
+    @NotNull
+    @NotBlank
+    private String psuIdentifierValue;
+
+    @NotNull
+    @NotBlank
+    private String psuContextIdentifierType;
+
+    @NotNull
+    @NotBlank
+    private String psuContextIdentifierValue;
+
+    @NotNull
+    private Integer   maxAllowedHistoryLong;
+
+    @NotNull
+    private Integer scopeTimeLimitInDays;
+
+    @NotNull
+    @NotBlank
+    private String redirectUri;
 }

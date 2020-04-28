@@ -47,7 +47,7 @@ public class AliorOpenApiService {
                 .requestHeader(buildRequestHeader(uuid))
                 .responseType("code")
                 .clientId(aliorProperties.getClientId())
-                .redirectUri("http://localhost:8080/public/consent/redirect")//TODO: move to properties
+                .redirectUri(aliorProperties.getRedirectUri())
         .scope("ais")
                 .scopeDetails(buildScopeDetails(uuid))
                 .state(state)
@@ -62,15 +62,15 @@ public class AliorOpenApiService {
 
         return RequestHeader.builder()
                 .requestId(requestId)
-                .userAgent("userAgent")//TODO: move to property
-        .ipAddress("127.0.0.1")//TODO: make it from request context
+                .userAgent(aliorProperties.getUserAgent())
+        .ipAddress("127.0.0.1")
         .sendDate(LocalDateTime.now())
-                .tppId("5380491953831936")//TODO: move to properties
+                .tppId(aliorProperties.getTppId())
         .isCompanyContext(true)
-                .psuIdentifierType("2888236854673408")//TODO: check documentation, thist probably should by som kind of arg
-                .psuIdentifierValue("2515599754264576")//TODO: check documentation, thist probably should by som kind of arg
-        .psuContextIdentifierType("7580329839689728")
-                .psuContextIdentifierValue("8013549762772992")
+                .psuIdentifierType(aliorProperties.getPsuIdentifierType())
+                .psuIdentifierValue(aliorProperties.getPsuIdentifierValue())
+        .psuContextIdentifierType(aliorProperties.getPsuContextIdentifierType())
+                .psuContextIdentifierValue(aliorProperties.getPsuContextIdentifierValue())
                 .build();
 
 
@@ -79,7 +79,7 @@ public class AliorOpenApiService {
     public List<PrivilegeList> buildPrivilegeList(){
     return Arrays.asList(PrivilegeList.builder()
             .aisGetTransactionsDone(AisGetTransactionsDone.builder().
-                    maxAllowedHistoryLong(1258)//TODO: add to properties
+                    maxAllowedHistoryLong(aliorProperties.getMaxAllowedHistoryLong())
                     .scopeUsageLimit("multiple").build()
             ).aisGetTransactionDetail(AisGetTransactionDetail.builder().scopeUsageLimit("multiple").build())
             .build());
@@ -90,7 +90,7 @@ public class AliorOpenApiService {
             .privilegeList(buildPrivilegeList())
             .scopeGroupType("ais")
             .consentId(consentId)
-            .scopeTimeLimit(LocalDateTime.now().plusDays(90))//probably move 90 to properties
+            .scopeTimeLimit(LocalDateTime.now().plusDays(aliorProperties.getScopeTimeLimitInDays()))//probably move 90 to properties
         .throttlingPolicy("psd2Regulatory")
             .build();
     }
