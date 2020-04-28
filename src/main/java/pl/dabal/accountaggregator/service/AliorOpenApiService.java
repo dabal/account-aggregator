@@ -107,7 +107,7 @@ public class AliorOpenApiService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-String result=aliorOpenApiInvoker.invoke(user, uuid, json);
+String result=aliorOpenApiInvoker.invoke(user, uuid, buildOpenApiAuthAuthorizeRequestBody(uuid, state));
         return result;
     }
 

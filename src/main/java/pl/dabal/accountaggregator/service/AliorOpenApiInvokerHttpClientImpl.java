@@ -29,7 +29,7 @@ public class AliorOpenApiInvokerHttpClientImpl implements AliorOpenApiInvoker {
     private HttpClient httpClient;
 
     @Override
-    public String invoke(User user, String requestId, String json) {
+    public String invoke(User user, String requestId, Object json) {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://gateway.developer.aliorbank.pl/openapipl/sb/v2_1_1.1/auth/v2_1_1.1/authorize"))
@@ -42,7 +42,7 @@ public class AliorOpenApiInvokerHttpClientImpl implements AliorOpenApiInvoker {
                 .header("Accept-Charset", "utf-8")
                 .header("Accept-Encoding", "deflate")
                 .header("accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString((String)json))
                 .build();
         HttpResponse<String> response =
                 null;//.ofString());

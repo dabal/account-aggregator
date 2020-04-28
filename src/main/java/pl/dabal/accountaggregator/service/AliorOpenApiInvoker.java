@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.model.User;
 @Service
 public interface AliorOpenApiInvoker {
-    public String invoke(@AuthenticationPrincipal User user, String requestId, String json);
+    public String invoke(@AuthenticationPrincipal User user, String requestId, Object json);
 }
