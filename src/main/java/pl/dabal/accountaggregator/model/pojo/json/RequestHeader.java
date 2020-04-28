@@ -1,14 +1,21 @@
 
 package pl.dabal.accountaggregator.model.pojo.json;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -23,6 +30,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "psuContextIdentifierType",
     "psuContextIdentifierValue"
 })
+@Builder
+@Getter
+@Setter
 public class RequestHeader {
 
     @JsonProperty("requestId")
@@ -32,7 +42,11 @@ public class RequestHeader {
     @JsonProperty("ipAddress")
     private String ipAddress;
     @JsonProperty("sendDate")
-    private String sendDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone="UTC")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime sendDate;
     @JsonProperty("tppId")
     private String tppId;
     @JsonProperty("isCompanyContext")
@@ -45,9 +59,9 @@ public class RequestHeader {
     private String psuContextIdentifierType;
     @JsonProperty("psuContextIdentifierValue")
     private String psuContextIdentifierValue;
-    @JsonIgnore
+  @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
+/*
     @JsonProperty("requestId")
     public String getRequestId() {
         return requestId;
@@ -79,12 +93,12 @@ public class RequestHeader {
     }
 
     @JsonProperty("sendDate")
-    public String getSendDate() {
+    public LocalDateTime getSendDate() {
         return sendDate;
     }
 
     @JsonProperty("sendDate")
-    public void setSendDate(String sendDate) {
+    public void setSendDate(LocalDateTime sendDate) {
         this.sendDate = sendDate;
     }
 
@@ -157,5 +171,5 @@ public class RequestHeader {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-
+*/
 }

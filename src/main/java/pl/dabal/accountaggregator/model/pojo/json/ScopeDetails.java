@@ -1,15 +1,20 @@
 
 package pl.dabal.accountaggregator.model.pojo.json;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -19,6 +24,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "scopeTimeLimit",
     "throttlingPolicy"
 })
+@Builder
+@Getter
+@Setter
 public class ScopeDetails {
 
     @JsonProperty("privilegeList")
@@ -28,10 +36,15 @@ public class ScopeDetails {
     @JsonProperty("consentId")
     private String consentId;
     @JsonProperty("scopeTimeLimit")
-    private String scopeTimeLimit;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone="UTC")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime scopeTimeLimit;
     @JsonProperty("throttlingPolicy")
     private String throttlingPolicy;
-    @JsonIgnore
+
+    /*@JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("privilegeList")
@@ -93,5 +106,5 @@ public class ScopeDetails {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-
+*/
 }
