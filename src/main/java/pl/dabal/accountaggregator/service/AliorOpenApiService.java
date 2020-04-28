@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.config.AliorProperties;
 import pl.dabal.accountaggregator.model.Consent;
@@ -37,6 +38,7 @@ public class AliorOpenApiService {
     private ConsentRepository consentRepository;
     private HttpClient httpClient;
     private AliorProperties aliorProperties;
+    private AliorOpenApiInvoker aliorOpenApiInvoker;
 
     public AliorOpenApiRequest buildOpenApiAuthAuthorizeRequestBody(String uuid, String state){
 //        String uuid = Generators.timeBasedGenerator().generate().toString();
@@ -93,7 +95,7 @@ public class AliorOpenApiService {
             .build();
     }
 
-    public String createConsent(User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
+    public String createConsent(@AuthenticationPrincipal User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
         String state = Generators.timeBasedGenerator().generate().toString();
 
@@ -105,38 +107,8 @@ public class AliorOpenApiService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://gateway.developer.aliorbank.pl/openapipl/sb/v2_1_1.1/auth/v2_1_1.1/authorize"))
-                .timeout(Duration.ofMinutes(1))
-                .header("Content-Type", "application/json")
-                .header("x-ibm-client-id", aliorProperties.getClientId())
-                .header("x-ibm-client-secret", aliorProperties.getClientSecret())
-                .header("x-jws-signature", "")
-                .header("x-request-id", uuid)
-                .header("Accept-Charset", "utf-8")
-                .header("Accept-Encoding", "deflate")
-                .header("accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-        HttpResponse<String> response =
-                httpClient.send(request, HttpResponse.BodyHandlers.ofString(Charset.forName("utf-8")));//.ofString());
-        log.debug(String.valueOf(response.statusCode()));
-        log.debug(response.headers().map().toString());
-        //     response.
-        log.debug(response.body());
-
-
-       AuthAuthorizeResponse jsonResponse= mapper.readValue(response.body(),AuthAuthorizeResponse.class);//readerFor(AuthAuthorizeResponse.class).readValue(response.body());
-
-        /*JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(response.body());
-        log.debug(jsonObject.toJSONString());
-
-        String aspspRedirectUri = (String) jsonObject.get("aspspRedirectUri");
-        consentRepository.save(Consent.builder().name(uuid).user(user).state(state).build());*/
-
-        return (jsonResponse.getAspspRedirectUri());
+String result=aliorOpenApiInvoker.invoke(user, uuid, json);
+        return result;
     }
 
 }
