@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static javax.persistence.CascadeType.REMOVE;
@@ -36,5 +37,25 @@ public class Consent {
 
     @OneToMany(mappedBy = "consent", fetch = FetchType.EAGER, cascade = REMOVE)
     private List<Account> accounts;
+
+    LocalDateTime createdDate;
+    LocalDateTime scopeTimeLimit;
+
+public void setCreatedDate(){
+        this.createdDate=LocalDateTime.now();
+    }
+
+    public void setScopeTimeLimit(int limitInDays){
+        this.scopeTimeLimit=this.createdDate.plusDays(limitInDays);
+    }
+
+    public Consent(User user, String name, String state, int scopeLimitInDays )
+    {
+        this.user=user;
+        this.name=name;
+        this.state=state;
+        this.setCreatedDate();
+        this.setScopeTimeLimit(scopeLimitInDays);
+    }
 
 }

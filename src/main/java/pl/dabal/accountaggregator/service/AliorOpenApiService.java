@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.config.AliorProperties;
+import pl.dabal.accountaggregator.model.Consent;
 import pl.dabal.accountaggregator.model.User;
 import pl.dabal.accountaggregator.model.pojo.json.*;
 import pl.dabal.accountaggregator.repository.ConsentRepository;
@@ -31,25 +32,25 @@ public class AliorOpenApiService {
     private AliorProperties aliorProperties;
     private AliorOpenApiInvoker aliorOpenApiInvoker;
 
-    public AliorOpenApiRequest buildOpenApiAuthAuthorizeRequestBody(String uuid, String state) {
+    public AliorOpenApiRequest buildOpenApiAuthAuthorizeRequestBody(Consent consent) {
 //        String uuid = Generators.timeBasedGenerator().generate().toString();
 //        String state = Generators.timeBasedGenerator().generate().toString();
         return AliorOpenApiRequest.builder()
-                .requestHeader(buildRequestHeader(uuid))
+                .requestHeader(buildRequestHeader(consent))
                 .responseType("code")
                 .clientId(aliorProperties.getClientId())
                 .redirectUri(aliorProperties.getRedirectUri())
                 .scope("ais")
-                .scopeDetails(buildScopeDetails(uuid))
-                .state(state)
+                .scopeDetails(buildScopeDetails(consent))
+                .state(consent.getState())
                 .build();
     }
 
 
-    public RequestHeader buildRequestHeader(String requestId) {
+    public RequestHeader buildRequestHeader(Consent consent) {
 
         return RequestHeader.builder()
-                .requestId(requestId)
+                .requestId(consent.getName())
                 .userAgent(aliorProperties.getUserAgent())
                 .ipAddress("127.0.0.1")
                 .sendDate(LocalDateTime.now())
@@ -73,12 +74,12 @@ public class AliorOpenApiService {
                 .build());
     }
 
-    public ScopeDetails buildScopeDetails(String consentId) {
+    public ScopeDetails buildScopeDetails(Consent consent) {
         return ScopeDetails.builder()
                 .privilegeList(buildPrivilegeList())
                 .scopeGroupType("ais")
-                .consentId(consentId)
-                .scopeTimeLimit(LocalDateTime.now().plusDays(aliorProperties.getScopeTimeLimitInDays()))//probably move 90 to properties
+                .consentId(consent.getName())
+                .scopeTimeLimit(consent.getScopeTimeLimit())//probably move 90 to properties
                 .throttlingPolicy("psd2Regulatory")
                 .build();
     }
@@ -86,16 +87,17 @@ public class AliorOpenApiService {
     public String createConsent(@AuthenticationPrincipal User user) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
         String state = Generators.timeBasedGenerator().generate().toString();
-
+        Consent consent=new Consent(user, uuid,state,aliorProperties.getScopeTimeLimitInDays());
+        consentRepository.save(consent);
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
         try {
-            json = mapper.writeValueAsString(buildOpenApiAuthAuthorizeRequestBody(uuid, state));
+            json = mapper.writeValueAsString(buildOpenApiAuthAuthorizeRequestBody(consent));
             log.debug(json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        String result = aliorOpenApiInvoker.invoke(user, uuid, buildOpenApiAuthAuthorizeRequestBody(uuid, state));
+        String result = aliorOpenApiInvoker.invoke(user, uuid, buildOpenApiAuthAuthorizeRequestBody(consent));
         return result;
     }
 
