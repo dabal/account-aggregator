@@ -6,13 +6,12 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 import static javax.persistence.CascadeType.REMOVE;
 
 @Entity
-@Table(name="consents")
+@Table(name = "consents")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -35,7 +34,7 @@ public class Consent {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "consent", fetch = FetchType.EAGER,cascade=REMOVE)
+    @OneToMany(mappedBy = "consent", fetch = FetchType.EAGER, cascade = REMOVE)
     private List<Account> accounts;
 
 }

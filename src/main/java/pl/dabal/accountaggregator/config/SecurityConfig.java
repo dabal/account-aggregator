@@ -1,17 +1,14 @@
 package pl.dabal.accountaggregator.config;
 
-import lombok.experimental.FieldDefaults;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -23,22 +20,17 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import pl.dabal.accountaggregator.filters.TokenAuthenticationFilter;
 import pl.dabal.accountaggregator.providers.TokenAuthenticationProvider;
 
-
 import javax.servlet.Filter;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
-import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@FieldDefaults(level = PRIVATE, makeFinal = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static RequestMatcher getPublicURL() {
         List<RequestMatcher> requestMatchers = new ArrayList<>();
@@ -74,7 +66,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) {
-         web.ignoring().requestMatchers(getPublicURL());
+        web.ignoring().requestMatchers(getPublicURL());
 
         // Allow swagger to be accessed without authentication
 //    web.ignoring().antMatchers("/v2/api-docs")

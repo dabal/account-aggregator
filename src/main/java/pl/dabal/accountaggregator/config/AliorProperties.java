@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Configuration
-@ConfigurationProperties(prefix="bank.alior")
+@ConfigurationProperties(prefix = "bank.alior")
 @Validated
 @Data
 public class AliorProperties {
@@ -24,7 +24,7 @@ public class AliorProperties {
 
     @NotNull
     @NotBlank
-    private String    userAgent;
+    private String userAgent;
 
     @NotNull
     @NotBlank
@@ -47,7 +47,7 @@ public class AliorProperties {
     private String psuContextIdentifierValue;
 
     @NotNull
-    private Integer   maxAllowedHistoryLong;
+    private Integer maxAllowedHistoryLong;
 
     @NotNull
     private Integer scopeTimeLimitInDays;

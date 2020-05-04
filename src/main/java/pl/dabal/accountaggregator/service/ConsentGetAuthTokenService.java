@@ -7,7 +7,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 public interface ConsentGetAuthTokenService {
-    void  getAuth(String code, String state) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException;
+    void getAuth(String code, String state) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException;
 
     String getConsentCreateJSON(String uuid, String state);
 }

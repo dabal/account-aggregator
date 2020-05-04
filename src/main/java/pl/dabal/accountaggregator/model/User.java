@@ -1,23 +1,19 @@
 package pl.dabal.accountaggregator.model;
 
-import lombok.*;
-
-import org.hibernate.validator.constraints.UniqueElements;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Objects.requireNonNull;
 import static javax.persistence.CascadeType.REMOVE;
 
 @Builder
@@ -37,12 +33,12 @@ public class User implements UserDetails {
 
     @NotNull
     @NotBlank
-    @Size(min=1,max=50)
+    @Size(min = 1, max = 50)
     private String firstName;
 
     @NotNull
     @NotBlank
-    @Size(min=1,max=50)
+    @Size(min = 1, max = 50)
     private String lastName;
 
     @NotNull
@@ -58,9 +54,8 @@ public class User implements UserDetails {
     @JsonIgnore
     private String token;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER,cascade=REMOVE)
-   private List<Consent> consents;
-
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = REMOVE)
+    private List<Consent> consents;
 
 
     @JsonIgnore

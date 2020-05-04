@@ -6,14 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.config.AliorProperties;
 import pl.dabal.accountaggregator.model.Consent;
 import pl.dabal.accountaggregator.model.User;
 import pl.dabal.accountaggregator.repository.ConsentRepository;
 
-import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -22,8 +20,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
 import java.time.Duration;
 
 @Slf4j
@@ -71,6 +67,7 @@ public class ConsentGetOAuthLinkServiceImplHttpClient implements ConsentGetOAuth
         consentRepository.save(Consent.builder().name(uuid).user(user).state(state).build());
         return (aspspRedirectUri);
     }
+
     public String getConsentCreateJSON(String uuid, String state) {
 
         String request = String.format("{" +

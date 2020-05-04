@@ -2,7 +2,6 @@ package pl.dabal.accountaggregator.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.dabal.accountaggregator.model.Account;
-import pl.dabal.accountaggregator.model.User;
 
 import java.util.Optional;
 

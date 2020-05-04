@@ -1,6 +1,5 @@
 package pl.dabal.accountaggregator.controller;
 
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,46 +15,41 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-import static lombok.AccessLevel.PRIVATE;
-
 @Slf4j
 @RestController
 @RequestMapping("/public/consent")
-@FieldDefaults(level = PRIVATE, makeFinal = true)
 final class PublicConsentController {
 
-  ConsentGetOAuthLinkService consentGetOAuthLinkService;
-  ConsentGetAuthTokenService consentGetAuthTokenService;
+    private ConsentGetOAuthLinkService consentGetOAuthLinkService;
+    private ConsentGetAuthTokenService consentGetAuthTokenService;
 
-  public PublicConsentController(ConsentGetOAuthLinkServiceImplHttpClient consentGetOAuthLinkService, ConsentGetAuthTokenServiceImplHttpClient consentGetAuthTokenService) {
-    this.consentGetOAuthLinkService = consentGetOAuthLinkService;
-    this.consentGetAuthTokenService = consentGetAuthTokenService;
-  }
-
-
-  @GetMapping("/redirect")
-  public void retrieveOauthToken(@RequestParam String code, @RequestParam String state) {
-    String token=null;
-    try {
-    //token=  consentGetAuthTokenService.getAuth(code,state);
-      consentGetAuthTokenService.getAuth(code,state);
-
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (KeyManagementException e) {
-      e.printStackTrace();
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (ParseException e) {
-      e.printStackTrace();
+    public PublicConsentController(ConsentGetOAuthLinkServiceImplHttpClient consentGetOAuthLinkService, ConsentGetAuthTokenServiceImplHttpClient consentGetAuthTokenService) {
+        this.consentGetOAuthLinkService = consentGetOAuthLinkService;
+        this.consentGetAuthTokenService = consentGetAuthTokenService;
     }
+
+
+    @GetMapping("/redirect")
+    public void retrieveOauthToken(@RequestParam String code, @RequestParam String state) {
+        String token = null;
+        try {
+            //token=  consentGetAuthTokenService.getAuth(code,state);
+            consentGetAuthTokenService.getAuth(code, state);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 //    return token;
-  }
-
-
+    }
 
 
 }

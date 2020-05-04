@@ -18,10 +18,10 @@ public class AccountService {
     private AccountRepository accountRepository;
     private ConsentRepository consentRepository;
 
-    public void addAccount(String accountNumber, Consent consent){
+    public void addAccount(String accountNumber, Consent consent) {
         //Consent consent=consentRepository.findByName(consentStr).get();
-        Optional<Account> existedAccount=accountRepository.findByAccountNumber(accountNumber);
-        if(!existedAccount.isPresent()){
+        Optional<Account> existedAccount = accountRepository.findByAccountNumber(accountNumber);
+        if (!existedAccount.isPresent()) {
             accountRepository.save(Account.builder().accountNumber(accountNumber).consent(consent).build());
         }
 

@@ -1,6 +1,5 @@
 package pl.dabal.accountaggregator.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import pl.dabal.accountaggregator.validators.UniqueEmail;
 
@@ -18,12 +17,12 @@ public class UserDto {
 
     @NotNull
     @NotBlank
-    @Size(min=1,max=50)
+    @Size(min = 1, max = 50)
     private String firstName;
 
     @NotNull
     @NotBlank
-    @Size(min=1,max=50)
+    @Size(min = 1, max = 50)
     private String lastName;
 
     @NotNull
@@ -34,7 +33,7 @@ public class UserDto {
 
     @NotNull
     @NotBlank
-    @Size(min=4, max=15)
+    @Size(min = 4, max = 15)
     private String password;
 
 }

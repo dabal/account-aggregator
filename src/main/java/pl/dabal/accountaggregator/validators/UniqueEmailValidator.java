@@ -14,18 +14,20 @@ import java.util.Optional;
 @NoArgsConstructor
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 
-   private UserRepository userRepository;
+    private UserRepository userRepository;
 
-   @Autowired
-   public UniqueEmailValidator(UserRepository userRepository)
-   {this.userRepository=userRepository;}
-   @Override
-   public void initialize(UniqueEmail constraintAnnotation) {
-   }
+    @Autowired
+    public UniqueEmailValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-   @Override
-   public boolean isValid(String value, ConstraintValidatorContext context) {
-      Optional<User> user=userRepository.findByEmail(value);
-      return !userRepository.findByEmail(value).isPresent();
-         }
+    @Override
+    public void initialize(UniqueEmail constraintAnnotation) {
+    }
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        Optional<User> user = userRepository.findByEmail(value);
+        return !userRepository.findByEmail(value).isPresent();
+    }
 }

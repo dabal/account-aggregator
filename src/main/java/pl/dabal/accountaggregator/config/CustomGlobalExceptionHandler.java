@@ -14,8 +14,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -40,22 +42,21 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                                  HttpHeaders headers,
                                  HttpStatus status, WebRequest request) {
 
-Map<String, List<String>> fieldErrors= new HashMap<>();
+        Map<String, List<String>> fieldErrors = new HashMap<>();
 
-for(FieldError fieldError:ex.getBindingResult().getFieldErrors()){
-    if(fieldErrors.containsKey(fieldError.getField())){
-        List<String> currenList= (List<String>)fieldErrors.get(fieldError.getField());
-        currenList.add(fieldError.getDefaultMessage());
-        fieldErrors.replace(fieldError.getField(),currenList);
-    }
-    else{
-        List<String> currentList=new ArrayList<>();
-        currentList.add(fieldError.getDefaultMessage());
-        fieldErrors.put(fieldError.getField(), currentList);
-    }
-}
+        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+            if (fieldErrors.containsKey(fieldError.getField())) {
+                List<String> currenList = (List<String>) fieldErrors.get(fieldError.getField());
+                currenList.add(fieldError.getDefaultMessage());
+                fieldErrors.replace(fieldError.getField(), currenList);
+            } else {
+                List<String> currentList = new ArrayList<>();
+                currentList.add(fieldError.getDefaultMessage());
+                fieldErrors.put(fieldError.getField(), currentList);
+            }
+        }
 
-         return new ResponseEntity(fieldErrors, headers, status);
+        return new ResponseEntity(fieldErrors, headers, status);
         //tu było new ResponseEntity<>(body, headers, status); - trz
     }
 

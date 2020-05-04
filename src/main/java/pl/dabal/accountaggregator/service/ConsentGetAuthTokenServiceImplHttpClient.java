@@ -7,12 +7,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.config.AliorProperties;
 import pl.dabal.accountaggregator.model.Consent;
-import pl.dabal.accountaggregator.model.User;
-import pl.dabal.accountaggregator.repository.AccountRepository;
 import pl.dabal.accountaggregator.repository.ConsentRepository;
 
 import java.io.IOException;
@@ -30,8 +27,8 @@ import java.util.Iterator;
 @Service
 @AllArgsConstructor
 public class ConsentGetAuthTokenServiceImplHttpClient implements ConsentGetAuthTokenService {
-    private static final String CLIENT_ID="239c108f-7713-4995-a2df-9d056d4e31b5";
-    private static final String CLIENT_SECRET="tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
+    private static final String CLIENT_ID = "239c108f-7713-4995-a2df-9d056d4e31b5";
+    private static final String CLIENT_SECRET = "tJ3sQ5lV0mU1sV0xC5jV1eD6bP7dT8rR8tQ3yO7wU7jK8rY1uM";
 
     private ConsentRepository consentRepository;
     private AccountService accountService;
@@ -39,8 +36,7 @@ public class ConsentGetAuthTokenServiceImplHttpClient implements ConsentGetAuthT
     private AliorProperties aliorProperties;
 
 
-
-    public void  getAuth(String code, String state) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
+    public void getAuth(String code, String state) throws IOException, InterruptedException, KeyManagementException, NoSuchAlgorithmException, ParseException {
         String uuid = Generators.timeBasedGenerator().generate().toString();
 
         String body = "";//getTokenJSON(uuid, state, code);
@@ -66,13 +62,13 @@ public class ConsentGetAuthTokenServiceImplHttpClient implements ConsentGetAuthT
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(response.body());
         log.debug(jsonObject.toJSONString());
-        Consent consent=consentRepository.findByState(state).orElseThrow(()->new IllegalArgumentException());
-        JSONArray privilegeList = (JSONArray)((JSONObject) jsonObject.get("scope_details")).get("privilegeList");
+        Consent consent = consentRepository.findByState(state).orElseThrow(() -> new IllegalArgumentException());
+        JSONArray privilegeList = (JSONArray) ((JSONObject) jsonObject.get("scope_details")).get("privilegeList");
         Iterator objIter = privilegeList.iterator();
         while (objIter.hasNext()) {
-            JSONObject json=(JSONObject)objIter.next();
-            String accountNumber=(String)json.get("accountNumber");
-           accountService.addAccount(accountNumber,consent);
+            JSONObject json = (JSONObject) objIter.next();
+            String accountNumber = (String) json.get("accountNumber");
+            accountService.addAccount(accountNumber, consent);
 
         }
 
@@ -86,9 +82,9 @@ public class ConsentGetAuthTokenServiceImplHttpClient implements ConsentGetAuthT
     }
 
 
-   public  String getConsentCreateJSON(String uuid, String state, String code) {
+    public String getConsentCreateJSON(String uuid, String state, String code) {
 
-        String request= String.format("{\n" +
+        String request = String.format("{\n" +
                 "    \"requestHeader\": {\n" +
                 "        \"requestId\": \"%s\",\n" +
                 "        \"userAgent\": \"61\",\n" +
@@ -143,8 +139,8 @@ public class ConsentGetAuthTokenServiceImplHttpClient implements ConsentGetAuthT
                 "    \"is_user_session\": false,\n" +
                 "    \"state\": \"your state\"\n" +
                 "   \n" +
-                "}",uuid,code, uuid,aliorProperties.getClientId(), state);
-        ConsentGetAuthTokenServiceImplHttpClient.log.debug("REQUEST: "+request);
+                "}", uuid, code, uuid, aliorProperties.getClientId(), state);
+        ConsentGetAuthTokenServiceImplHttpClient.log.debug("REQUEST: " + request);
         return request;
     }
 }

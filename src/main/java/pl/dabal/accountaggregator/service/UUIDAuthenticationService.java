@@ -3,8 +3,6 @@ package pl.dabal.accountaggregator.service;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,43 +14,38 @@ import pl.dabal.accountaggregator.repository.UserRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-import static lombok.AccessLevel.PACKAGE;
-import static lombok.AccessLevel.PRIVATE;
-
 @Slf4j
 @Service
-@AllArgsConstructor(access = PACKAGE)
-@FieldDefaults(level = PRIVATE, makeFinal = true)
+@AllArgsConstructor
 final class UUIDAuthenticationService implements UserAuthenticationService {
-  @NonNull
-  UserRepository users;
-  @Autowired
-  BCryptPasswordEncoder passwordEncoder;
+    @NonNull
+    UserRepository users;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
-  @Override
-  public Optional<String> login(final String email, final String password) {
-    final String uuid = UUID.randomUUID().toString();
-    final User user =users.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("invalid login and/or password"));
+    @Override
+    public Optional<String> login(final String email, final String password) {
+        final String uuid = UUID.randomUUID().toString();
+        final User user = users.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("invalid login and/or password"));
 
-    if(passwordEncoder.matches(password,user.getPassword())){
-  user.setToken(uuid);
-  users.save(user);
-}
-else{
-  throw new UsernameNotFoundException("invalid login and/or password");
-}
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            user.setToken(uuid);
+            users.save(user);
+        } else {
+            throw new UsernameNotFoundException("invalid login and/or password");
+        }
 
-    return Optional.of(uuid);
-  }
+        return Optional.of(uuid);
+    }
 
-  @Override
-  public Optional<User> findByToken(final String token) {
-    return users.findByToken(token);
-  }
+    @Override
+    public Optional<User> findByToken(final String token) {
+        return users.findByToken(token);
+    }
 
-  @Override
-  public void logout(User user) {
-    //User user=findByToken()
+    @Override
+    public void logout(User user) {
+        //User user=findByToken()
 
-  }
+    }
 }

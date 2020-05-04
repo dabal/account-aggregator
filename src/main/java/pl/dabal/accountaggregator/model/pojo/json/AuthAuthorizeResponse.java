@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-"aspspRedirectUri"
+        "aspspRedirectUri"
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
@@ -21,9 +21,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class AuthAuthorizeResponse {
 
-@JsonProperty("aspspRedirectUri")
-@NotNull
-@NotBlank
-private String aspspRedirectUri;
+    @JsonProperty("aspspRedirectUri")
+    @NotNull
+    @NotBlank
+    private String aspspRedirectUri;
 
 }

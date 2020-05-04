@@ -1,34 +1,32 @@
 
 package pl.dabal.accountaggregator.model.pojo.json;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "requestId",
-    "userAgent",
-    "ipAddress",
-    "sendDate",
-    "tppId",
-    "isCompanyContext",
-    "psuIdentifierType",
-    "psuIdentifierValue",
-    "psuContextIdentifierType",
-    "psuContextIdentifierValue"
+        "requestId",
+        "userAgent",
+        "ipAddress",
+        "sendDate",
+        "tppId",
+        "isCompanyContext",
+        "psuIdentifierType",
+        "psuIdentifierValue",
+        "psuContextIdentifierType",
+        "psuContextIdentifierValue"
 })
 @Builder
 @Getter
@@ -42,9 +40,9 @@ public class RequestHeader {
     @JsonProperty("ipAddress")
     private String ipAddress;
     @JsonProperty("sendDate")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone="UTC")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime sendDate;
     @JsonProperty("tppId")
@@ -59,7 +57,7 @@ public class RequestHeader {
     private String psuContextIdentifierType;
     @JsonProperty("psuContextIdentifierValue")
     private String psuContextIdentifierValue;
-  @JsonIgnore
+    @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 /*
     @JsonProperty("requestId")

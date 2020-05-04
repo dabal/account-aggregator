@@ -2,7 +2,6 @@ package pl.dabal.accountaggregator.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class AliorOpenApiInvokerHttpClientImpl implements AliorOpenApiInvoker {
                 .header("Accept-Charset", "utf-8")
                 .header("Accept-Encoding", "deflate")
                 .header("accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString((String)json))
+                .POST(HttpRequest.BodyPublishers.ofString((String) json))
                 .build();
         HttpResponse<String> response =
                 null;//.ofString());
@@ -59,9 +58,9 @@ public class AliorOpenApiInvokerHttpClientImpl implements AliorOpenApiInvoker {
         log.debug(response.body());
 
 
-        AuthAuthorizeResponse jsonResponse=null;
+        AuthAuthorizeResponse jsonResponse = null;
         try {
-            jsonResponse=objectMapper.readValue(response.body(),AuthAuthorizeResponse.class);//readerFor(AuthAuthorizeResponse.class).readValue(response.body());
+            jsonResponse = objectMapper.readValue(response.body(), AuthAuthorizeResponse.class);//readerFor(AuthAuthorizeResponse.class).readValue(response.body());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

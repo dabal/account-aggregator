@@ -6,7 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name="accounts")
+@Table(name = "accounts")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,7 +20,7 @@ public class Account {
 
 
     private String accountNumber;
-@JsonIgnore
+    @JsonIgnore
     @ManyToOne
     private Consent consent;
 

@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SpringFoxConfig {                                    
+public class SpringFoxConfig {
     @Bean
     public Docket api() {
         // Budujemy opis naszej aplikacji do wykorzystania w dokumentacji
