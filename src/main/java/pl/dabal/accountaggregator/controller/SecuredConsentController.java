@@ -26,19 +26,9 @@ public class SecuredConsentController {
     @GetMapping("add")
     public TokenDto test(@AuthenticationPrincipal User user) {
         String json = "";
-        try {
+
             json = aliorOpenApiService.createConsent(user);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
         return new TokenDto(json);
     }
 

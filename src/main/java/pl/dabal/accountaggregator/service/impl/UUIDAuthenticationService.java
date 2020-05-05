@@ -1,4 +1,4 @@
-package pl.dabal.accountaggregator.service;
+package pl.dabal.accountaggregator.service.impl;
 
 
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.model.User;
 import pl.dabal.accountaggregator.repository.UserRepository;
+import pl.dabal.accountaggregator.service.UserAuthenticationService;
 
 import java.util.Optional;
 import java.util.UUID;

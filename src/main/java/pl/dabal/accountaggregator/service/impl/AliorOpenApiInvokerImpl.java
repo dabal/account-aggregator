@@ -1,4 +1,4 @@
-package pl.dabal.accountaggregator.service;
+package pl.dabal.accountaggregator.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,17 +11,18 @@ import org.springframework.web.client.RestTemplate;
 import pl.dabal.accountaggregator.config.AliorProperties;
 import pl.dabal.accountaggregator.model.json.AliorOpenApiRequest;
 import pl.dabal.accountaggregator.model.json.AliorOpenApiResponse;
+import pl.dabal.accountaggregator.service.AliorOpenApiInvoker;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 @Primary
-public class AliorOpenApiInvokerRestTemplateImpl  {
+public class AliorOpenApiInvokerImpl implements AliorOpenApiInvoker {
 
 
     private AliorProperties aliorProperties;
 
-
+@Override
     public AliorOpenApiResponse invoke(String url, AliorOpenApiRequest aliorOpenApiRequest) {
         RestTemplate restTemplate = new RestTemplate();
        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
