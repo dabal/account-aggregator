@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,8 +39,13 @@ public class Consent {
     @OneToMany(mappedBy = "consent", fetch = FetchType.EAGER, cascade = REMOVE)
     private List<Account> accounts;
 
-    LocalDateTime createdDate;
-    LocalDateTime scopeTimeLimit;
+    private LocalDateTime createdDate;
+    private LocalDateTime scopeTimeLimit;
+
+@Size(max=1024)
+    private String accessToken;
+
+
 
 public void setCreatedDate(){
         this.createdDate=LocalDateTime.now();

@@ -55,4 +55,12 @@ public class AliorProperties {
     @NotNull
     @NotBlank
     private String redirectUri;
+
+    @NotNull
+    @NotBlank
+    private String authorizeUrl;
+
+    @NotNull
+    @NotBlank
+    private String tokenUrl;
 }

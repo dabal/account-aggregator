@@ -2,7 +2,9 @@
 package pl.dabal.accountaggregator.model.pojo.json;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,8 @@ import java.util.Map;
         "scopeUsageLimit"
 })
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AisGetTransactionDetail {
 
     @JsonProperty("scopeUsageLimit")

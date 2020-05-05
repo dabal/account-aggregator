@@ -11,6 +11,12 @@ import javax.validation.constraints.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "token_type",
+        "access_token",
+        "expires_in",
+        "scope",
+        "scope_details",
+        "responseHeader",
         "aspspRedirectUri"
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,11 +25,24 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthAuthorizeResponse {
+public class AliorOpenApiResponse {
 
     @JsonProperty("aspspRedirectUri")
     @NotNull
     @NotBlank
     private String aspspRedirectUri;
+
+    @JsonProperty("token_type")
+    public String tokenType;
+    @JsonProperty("access_token")
+    public String accessToken;
+    @JsonProperty("expires_in")
+    public Integer expiresIn;
+    @JsonProperty("scope")
+    public String scope;
+    @JsonProperty("scope_details")
+    public ScopeDetails scopeDetails;
+    @JsonProperty("responseHeader")
+    public ResponseHeader responseHeader;
 
 }

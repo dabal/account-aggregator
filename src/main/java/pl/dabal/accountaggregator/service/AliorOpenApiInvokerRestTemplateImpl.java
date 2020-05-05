@@ -1,6 +1,5 @@
 package pl.dabal.accountaggregator.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -10,31 +9,29 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.dabal.accountaggregator.config.AliorProperties;
-import pl.dabal.accountaggregator.model.User;
 import pl.dabal.accountaggregator.model.pojo.json.AliorOpenApiRequest;
-import pl.dabal.accountaggregator.model.pojo.json.AuthAuthorizeResponse;
-
-import java.net.http.HttpClient;
+import pl.dabal.accountaggregator.model.pojo.json.AliorOpenApiResponse;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 @Primary
-public class AliorOpenApiInvokerRestTemplateImpl implements AliorOpenApiInvoker {
+public class AliorOpenApiInvokerRestTemplateImpl  {
 
 
     private AliorProperties aliorProperties;
-    private ObjectMapper objectMapper;
-    private HttpClient httpClient;
-
-    @Override
-    public String invoke(User user, String requestId, Object json) {
 
 
+    public AliorOpenApiResponse invoke(String url, AliorOpenApiRequest aliorOpenApiRequest) {
         RestTemplate restTemplate = new RestTemplate();
+       restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        HttpHeaders headers = getHttpHeaders(aliorOpenApiRequest.getRequestHeader().getRequestId());
+        HttpEntity<AliorOpenApiRequest> request = new HttpEntity<>(aliorOpenApiRequest, headers);
+        AliorOpenApiResponse response = restTemplate.postForObject(url, request, AliorOpenApiResponse.class);
+        return response;
+    }
 
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-
+    private HttpHeaders getHttpHeaders(String requestId) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("x-ibm-client-id", aliorProperties.getClientId());
@@ -44,11 +41,6 @@ public class AliorOpenApiInvokerRestTemplateImpl implements AliorOpenApiInvoker 
         headers.add("Accept-Charset", "utf-8");
         headers.add("Accept-Encoding", "deflate");
         headers.add("accept", "application/json");
-
-
-        HttpEntity<AliorOpenApiRequest> request = new HttpEntity<>((AliorOpenApiRequest) json, headers);
-        AuthAuthorizeResponse response = restTemplate.postForObject("https://gateway.developer.aliorbank.pl/openapipl/sb/v2_1_1.1/auth/v2_1_1.1/authorize", request, AuthAuthorizeResponse.class);
-
-        return (response.getAspspRedirectUri());
+        return headers;
     }
 }

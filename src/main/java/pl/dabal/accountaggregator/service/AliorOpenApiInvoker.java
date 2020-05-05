@@ -1,10 +1,9 @@
 package pl.dabal.accountaggregator.service;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import pl.dabal.accountaggregator.model.User;
+import pl.dabal.accountaggregator.model.pojo.json.AliorOpenApiResponse;
 
 @Service
 public interface AliorOpenApiInvoker {
-    public String invoke(@AuthenticationPrincipal User user, String requestId, Object json);
+    public AliorOpenApiResponse invoke(String url, String requestId, Object json);
 }

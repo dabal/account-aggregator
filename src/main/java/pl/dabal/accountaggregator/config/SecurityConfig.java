@@ -1,6 +1,7 @@
 package pl.dabal.accountaggregator.config;
 
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -32,7 +33,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private static RequestMatcher getPublicURL() {
+
+
+    public static RequestMatcher getPublicURL() {
         List<RequestMatcher> requestMatchers = new ArrayList<>();
         requestMatchers.add(new AntPathRequestMatcher("/public/**"));
         requestMatchers.add(new AntPathRequestMatcher("/v2/api-docs"));
@@ -43,10 +46,12 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         requestMatchers.add(new AntPathRequestMatcher("/front/**"));
         requestMatchers.add(new AntPathRequestMatcher("/assets/**"));
         requestMatchers.add(new AntPathRequestMatcher("/public"));
+        requestMatchers.add(new AntPathRequestMatcher("/error"));
 
         RequestMatcher publicUrl = new OrRequestMatcher(requestMatchers);
         return publicUrl;
     }
+
 
 
     private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(getPublicURL());
@@ -106,7 +111,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    Filter restAuthenticationFilter() throws Exception {
+    TokenAuthenticationFilter restAuthenticationFilter() throws Exception {
         final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(successHandler());
@@ -123,13 +128,13 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * Disable Spring boot automatic filter registration.
      */
- /* @Bean
-  FilterRegistrationBean disableAutoRegistration(final TokenAuthenticationFilter filter) {
+  @Bean
+  FilterRegistrationBean disableAutoRegistration(TokenAuthenticationFilter filter) {
     final FilterRegistrationBean registration = new FilterRegistrationBean(filter);
     registration.setEnabled(false);
     return registration;
   }
-*/
+
     @Bean
     AuthenticationEntryPoint forbiddenEntryPoint() {
         return new HttpStatusEntryPoint(FORBIDDEN);
