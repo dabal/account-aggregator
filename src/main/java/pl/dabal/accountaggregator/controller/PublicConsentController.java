@@ -21,11 +21,6 @@ final class PublicConsentController {
 
     private AliorOpenApiService aliorOpenApiService;
 
-    private ConsentGetOAuthLinkService consentGetOAuthLinkService;
-    private ConsentGetAuthTokenService consentGetAuthTokenService;
-
-
-
 
     @GetMapping("/redirect")
     public void retrieveOauthToken(@RequestParam String code, @RequestParam String state) {
