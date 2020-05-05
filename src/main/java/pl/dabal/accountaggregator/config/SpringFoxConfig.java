@@ -18,8 +18,8 @@ public class SpringFoxConfig {
     public Docket api() {
         // Budujemy opis naszej aplikacji do wykorzystania w dokumentacji
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("Sample OpenApi Connector to bank")
-                .description("Sample OpenApi Connector.")
+                .title("Simple OpenApi Connector to AliorBank")
+                .description("Simple OpenApi Connector.")
                 .build();
 
         // Budujemy konfigurację dokumentacji
