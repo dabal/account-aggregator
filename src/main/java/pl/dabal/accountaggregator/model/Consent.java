@@ -1,6 +1,7 @@
 package pl.dabal.accountaggregator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,6 +44,7 @@ public class Consent {
     private LocalDateTime scopeTimeLimit;
 
 @Size(max=1024)
+    @JsonIgnore
     private String accessToken;
 
 
