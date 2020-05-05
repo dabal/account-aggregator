@@ -1,7 +1,7 @@
 package pl.dabal.accountaggregator.service;
 
 import org.springframework.stereotype.Service;
-import pl.dabal.accountaggregator.model.pojo.json.AliorOpenApiResponse;
+import pl.dabal.accountaggregator.model.json.AliorOpenApiResponse;
 
 @Service
 public interface AliorOpenApiInvoker {

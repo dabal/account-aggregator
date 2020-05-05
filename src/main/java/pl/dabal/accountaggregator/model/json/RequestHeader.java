@@ -1,5 +1,5 @@
 
-package pl.dabal.accountaggregator.model.pojo.json;
+package pl.dabal.accountaggregator.model.json;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

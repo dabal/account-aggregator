@@ -1,12 +1,9 @@
 
-package pl.dabal.accountaggregator.model.pojo.json;
+package pl.dabal.accountaggregator.model.json;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Builder
 @Data

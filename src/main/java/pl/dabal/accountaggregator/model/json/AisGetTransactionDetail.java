@@ -1,22 +1,25 @@
 
-package pl.dabal.accountaggregator.model.pojo.json;
+package pl.dabal.accountaggregator.model.json;
 
 import com.fasterxml.jackson.annotation.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "scopeUsageLimit",
-        "maxAllowedHistoryLong"
+        "scopeUsageLimit"
 })
-public class AisGetTransactionsRejected {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AisGetTransactionDetail {
 
     @JsonProperty("scopeUsageLimit")
     private String scopeUsageLimit;
-    @JsonProperty("maxAllowedHistoryLong")
-    private Integer maxAllowedHistoryLong;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -28,16 +31,6 @@ public class AisGetTransactionsRejected {
     @JsonProperty("scopeUsageLimit")
     public void setScopeUsageLimit(String scopeUsageLimit) {
         this.scopeUsageLimit = scopeUsageLimit;
-    }
-
-    @JsonProperty("maxAllowedHistoryLong")
-    public Integer getMaxAllowedHistoryLong() {
-        return maxAllowedHistoryLong;
-    }
-
-    @JsonProperty("maxAllowedHistoryLong")
-    public void setMaxAllowedHistoryLong(Integer maxAllowedHistoryLong) {
-        this.maxAllowedHistoryLong = maxAllowedHistoryLong;
     }
 
     @JsonAnyGetter

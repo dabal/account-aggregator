@@ -9,8 +9,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.dabal.accountaggregator.config.AliorProperties;
-import pl.dabal.accountaggregator.model.pojo.json.AliorOpenApiRequest;
-import pl.dabal.accountaggregator.model.pojo.json.AliorOpenApiResponse;
+import pl.dabal.accountaggregator.model.json.AliorOpenApiRequest;
+import pl.dabal.accountaggregator.model.json.AliorOpenApiResponse;
 
 @Service
 @Slf4j

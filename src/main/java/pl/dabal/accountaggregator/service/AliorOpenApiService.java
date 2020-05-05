@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import pl.dabal.accountaggregator.config.AliorProperties;
 import pl.dabal.accountaggregator.model.Consent;
 import pl.dabal.accountaggregator.model.User;
-import pl.dabal.accountaggregator.model.pojo.json.*;
+import pl.dabal.accountaggregator.model.json.*;
+
 import pl.dabal.accountaggregator.repository.ConsentRepository;
 
 import java.io.IOException;

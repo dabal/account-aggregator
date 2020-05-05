@@ -1,11 +1,8 @@
 
-package pl.dabal.accountaggregator.model.pojo.json;
+package pl.dabal.accountaggregator.model.json;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({

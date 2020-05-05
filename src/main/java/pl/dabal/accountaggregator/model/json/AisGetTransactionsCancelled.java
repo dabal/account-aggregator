@@ -1,5 +1,5 @@
 
-package pl.dabal.accountaggregator.model.pojo.json;
+package pl.dabal.accountaggregator.model.json;
 
 import com.fasterxml.jackson.annotation.*;
 
@@ -11,7 +11,7 @@ import java.util.Map;
         "scopeUsageLimit",
         "maxAllowedHistoryLong"
 })
-public class AisGetTransactionsPending {
+public class AisGetTransactionsCancelled {
 
     @JsonProperty("scopeUsageLimit")
     private String scopeUsageLimit;
