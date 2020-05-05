@@ -28,7 +28,6 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
 
     private ConsentRepository consentRepository;
     private AccountService accountService;
-    private HttpClient httpClient;
     private AliorProperties aliorProperties;
     private AliorOpenApiInvoker aliorOpenApiInvoker;
 
