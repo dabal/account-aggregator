@@ -22,10 +22,10 @@ public class AliorOpenApiInvokerImpl implements AliorOpenApiInvoker {
 
     private AliorProperties aliorProperties;
 
-@Override
+    @Override
     public AliorOpenApiResponse invoke(String url, AliorOpenApiRequest aliorOpenApiRequest) {
         RestTemplate restTemplate = new RestTemplate();
-       restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         HttpHeaders headers = getHttpHeaders(aliorOpenApiRequest.getRequestHeader().getRequestId());
         HttpEntity<AliorOpenApiRequest> request = new HttpEntity<>(aliorOpenApiRequest, headers);
         AliorOpenApiResponse response = restTemplate.postForObject(url, request, AliorOpenApiResponse.class);

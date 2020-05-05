@@ -21,7 +21,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import pl.dabal.accountaggregator.filters.TokenAuthenticationFilter;
 import pl.dabal.accountaggregator.providers.TokenAuthenticationProvider;
 
-import javax.servlet.Filter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(getPublicURL());
+    TokenAuthenticationProvider provider;
+
+    SecurityConfig(final TokenAuthenticationProvider provider) {
+        super();
+        this.provider = requireNonNull(provider);
+    }
 
     public static RequestMatcher getPublicURL() {
         List<RequestMatcher> requestMatchers = new ArrayList<>();
@@ -50,18 +57,6 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         RequestMatcher publicUrl = new OrRequestMatcher(requestMatchers);
         return publicUrl;
-    }
-
-
-
-    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(getPublicURL());
-
-    TokenAuthenticationProvider provider;
-
-
-    SecurityConfig(final TokenAuthenticationProvider provider) {
-        super();
-        this.provider = requireNonNull(provider);
     }
 
     @Override
@@ -128,12 +123,12 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * Disable Spring boot automatic filter registration.
      */
-  @Bean
-  FilterRegistrationBean disableAutoRegistration(TokenAuthenticationFilter filter) {
-    final FilterRegistrationBean registration = new FilterRegistrationBean(filter);
-    registration.setEnabled(false);
-    return registration;
-  }
+    @Bean
+    FilterRegistrationBean disableAutoRegistration(TokenAuthenticationFilter filter) {
+        final FilterRegistrationBean registration = new FilterRegistrationBean(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
 
     @Bean
     AuthenticationEntryPoint forbiddenEntryPoint() {

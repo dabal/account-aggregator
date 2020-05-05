@@ -16,7 +16,6 @@ import pl.dabal.accountaggregator.service.AccountService;
 import pl.dabal.accountaggregator.service.AliorOpenApiInvoker;
 import pl.dabal.accountaggregator.service.AliorOpenApiService;
 
-import java.net.http.HttpClient;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -84,7 +83,7 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
     public String createConsent(@AuthenticationPrincipal User user) {
         String uuid = Generators.timeBasedGenerator().generate().toString();
         String state = Generators.timeBasedGenerator().generate().toString();
-        Consent consent=new Consent(user, uuid,state,aliorProperties.getScopeTimeLimitInDays());
+        Consent consent = new Consent(user, uuid, state, aliorProperties.getScopeTimeLimitInDays());
         consentRepository.save(consent);
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
@@ -94,20 +93,20 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getAuthorizeUrl(),buildOpenApiAuthAuthorizeRequestBody(consent));
+        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getAuthorizeUrl(), buildOpenApiAuthAuthorizeRequestBody(consent));
         return response.getAspspRedirectUri();
     }
 
-    public AliorOpenApiRequest buildOpenApiAuthTokenRequestBody(Consent consent, String requestId, String code){
-        AliorOpenApiRequest aliorOpenApiAuthTokenRequest=buildOpenApiAuthAuthorizeRequestBody(consent);
+    public AliorOpenApiRequest buildOpenApiAuthTokenRequestBody(Consent consent, String requestId, String code) {
+        AliorOpenApiRequest aliorOpenApiAuthTokenRequest = buildOpenApiAuthAuthorizeRequestBody(consent);
         aliorOpenApiAuthTokenRequest.getRequestHeader().setRequestId(requestId);
         aliorOpenApiAuthTokenRequest.setGrantType("authorization_code");
         aliorOpenApiAuthTokenRequest.setCode(code);
         return aliorOpenApiAuthTokenRequest;
     }
 
-    public String authorizeConsent(String authCode, String state){
-        Consent consent=consentRepository.findByState(state).get();
+    public String authorizeConsent(String authCode, String state) {
+        Consent consent = consentRepository.findByState(state).get();
         String requestId = Generators.timeBasedGenerator().generate().toString();
         String json = "";
         ObjectMapper mapper = new ObjectMapper();
@@ -117,15 +116,15 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getTokenUrl(),buildOpenApiAuthTokenRequestBody(consent, requestId, authCode));
+        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getTokenUrl(), buildOpenApiAuthTokenRequestBody(consent, requestId, authCode));
         consent.setAccessToken(response.getAccessToken());
         consentRepository.save(consent);
-        for (PrivilegeList privilege: response.getScopeDetails().getPrivilegeList()) {
+        for (PrivilegeList privilege : response.getScopeDetails().getPrivilegeList()) {
             accountService.addAccount(privilege.getAccountNumber(), consent);
-            
+
         }
 
-        return null ;
+        return null;
     }
 
 }

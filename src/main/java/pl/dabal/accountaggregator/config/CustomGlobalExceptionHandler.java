@@ -46,7 +46,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             if (fieldErrors.containsKey(fieldError.getField())) {
-                List<String> currenList = (List<String>) fieldErrors.get(fieldError.getField());
+                List<String> currenList = fieldErrors.get(fieldError.getField());
                 currenList.add(fieldError.getDefaultMessage());
                 fieldErrors.replace(fieldError.getField(), currenList);
             } else {
@@ -57,7 +57,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         }
 
         return new ResponseEntity(fieldErrors, headers, status);
-        //tu było new ResponseEntity<>(body, headers, status); - trz
+
     }
 
 }

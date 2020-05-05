@@ -1,4 +1,3 @@
-
 package pl.dabal.accountaggregator.model.json;
 
 import com.fasterxml.jackson.annotation.*;

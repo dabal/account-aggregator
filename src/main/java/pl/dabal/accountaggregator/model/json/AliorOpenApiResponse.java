@@ -27,11 +27,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class AliorOpenApiResponse {
 
-    @JsonProperty("aspspRedirectUri")
-    @NotNull
-    @NotBlank
-    private String aspspRedirectUri;
-
     @JsonProperty("token_type")
     public String tokenType;
     @JsonProperty("access_token")
@@ -44,5 +39,9 @@ public class AliorOpenApiResponse {
     public ScopeDetails scopeDetails;
     @JsonProperty("responseHeader")
     public ResponseHeader responseHeader;
+    @JsonProperty("aspspRedirectUri")
+    @NotNull
+    @NotBlank
+    private String aspspRedirectUri;
 
 }

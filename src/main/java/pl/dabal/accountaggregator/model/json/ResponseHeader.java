@@ -11,20 +11,20 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
-"requestId",
-"sendDate",
-"isCallback"
+        "requestId",
+        "sendDate",
+        "isCallback"
 })
 @Getter
 @Setter
 @NoArgsConstructor
 public class ResponseHeader {
 
-@JsonProperty("requestId")
-public String requestId;
-@JsonProperty("sendDate")
-public String sendDate;
-@JsonProperty("isCallback")
-public Boolean isCallback;
+    @JsonProperty("requestId")
+    public String requestId;
+    @JsonProperty("sendDate")
+    public String sendDate;
+    @JsonProperty("isCallback")
+    public Boolean isCallback;
 
 }

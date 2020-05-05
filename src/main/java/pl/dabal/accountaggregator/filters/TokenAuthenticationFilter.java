@@ -2,14 +2,12 @@ package pl.dabal.accountaggregator.filters;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.removeStart;
 public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static final String BEARER = "Bearer";
 
-    public TokenAuthenticationFilter(){
+    public TokenAuthenticationFilter() {
         super(new AntPathRequestMatcher(null));
     }
 
@@ -44,7 +42,7 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
                 .map(value -> removeStart(value, BEARER))
                 .map(String::trim)
                 .orElseThrow(() -> {
-                    log.info("BadCredentialsException - "+request.getContextPath() + " / " + request.getServletPath());
+                    log.info("BadCredentialsException - " + request.getContextPath() + " / " + request.getServletPath());
                     throw new BadCredentialsException("Missing Authentication Token");
                 });
 

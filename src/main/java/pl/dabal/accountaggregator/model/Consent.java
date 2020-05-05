@@ -1,7 +1,6 @@
 package pl.dabal.accountaggregator.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,27 +42,25 @@ public class Consent {
     private LocalDateTime createdDate;
     private LocalDateTime scopeTimeLimit;
 
-@Size(max=1024)
+    @Size(max = 1024)
     @JsonIgnore
     private String accessToken;
 
 
-
-public void setCreatedDate(){
-        this.createdDate=LocalDateTime.now();
-    }
-
-    public void setScopeTimeLimit(int limitInDays){
-        this.scopeTimeLimit=this.createdDate.plusDays(limitInDays);
-    }
-
-    public Consent(User user, String name, String state, int scopeLimitInDays )
-    {
-        this.user=user;
-        this.name=name;
-        this.state=state;
+    public Consent(User user, String name, String state, int scopeLimitInDays) {
+        this.user = user;
+        this.name = name;
+        this.state = state;
         this.setCreatedDate();
         this.setScopeTimeLimit(scopeLimitInDays);
+    }
+
+    public void setCreatedDate() {
+        this.createdDate = LocalDateTime.now();
+    }
+
+    public void setScopeTimeLimit(int limitInDays) {
+        this.scopeTimeLimit = this.createdDate.plusDays(limitInDays);
     }
 
 }
