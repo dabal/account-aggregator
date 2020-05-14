@@ -13,7 +13,7 @@ import pl.dabal.accountaggregator.service.UserAuthenticationService;
 @RequestMapping("/users")
 
 @AllArgsConstructor
-final class SecuredUsersController {
+public final class SecuredUsersController {
     @NonNull
     private UserAuthenticationService authentication;
 

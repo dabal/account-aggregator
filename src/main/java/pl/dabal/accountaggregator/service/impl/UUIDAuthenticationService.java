@@ -18,7 +18,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @AllArgsConstructor
-final class UUIDAuthenticationService implements UserAuthenticationService {
+public final class UUIDAuthenticationService implements UserAuthenticationService {
     @NonNull
     UserRepository users;
     @Autowired
