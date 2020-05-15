@@ -13,6 +13,8 @@ import pl.dabal.accountaggregator.model.json.AliorOpenApiRequest;
 import pl.dabal.accountaggregator.model.json.AliorOpenApiResponse;
 import pl.dabal.accountaggregator.service.AliorOpenApiInvoker;
 
+import java.util.Map;
+
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -23,25 +25,19 @@ public class AliorOpenApiInvokerImpl implements AliorOpenApiInvoker {
     private AliorProperties aliorProperties;
 
     @Override
-    public AliorOpenApiResponse invoke(String url, AliorOpenApiRequest aliorOpenApiRequest) {
+    public AliorOpenApiResponse invoke(String url, AliorOpenApiRequest aliorOpenApiRequest, Map<String, String > headerMap) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        HttpHeaders headers = getHttpHeaders(aliorOpenApiRequest.getRequestHeader().getRequestId());
+        HttpHeaders headers = getHttpHeaders(headerMap);
         HttpEntity<AliorOpenApiRequest> request = new HttpEntity<>(aliorOpenApiRequest, headers);
         AliorOpenApiResponse response = restTemplate.postForObject(url, request, AliorOpenApiResponse.class);
         return response;
     }
 
-    private HttpHeaders getHttpHeaders(String requestId) {
+    private HttpHeaders getHttpHeaders(Map<String, String > headerMap) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        headers.add("x-ibm-client-id", aliorProperties.getClientId());
-        headers.add("x-ibm-client-secret", aliorProperties.getClientSecret());
-        headers.add("x-jws-signature", "");
-        headers.add("x-request-id", requestId);
-        headers.add("Accept-Charset", "utf-8");
-        headers.add("Accept-Encoding", "deflate");
-        headers.add("accept", "application/json");
+        headerMap.forEach((k,v) -> headers.add(k,v));
+
         return headers;
     }
 }

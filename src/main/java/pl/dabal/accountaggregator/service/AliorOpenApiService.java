@@ -22,7 +22,7 @@ public interface AliorOpenApiService {
 
     ScopeDetails buildScopeDetails(Consent consent);
 
-    String createConsent(@AuthenticationPrincipal User user);
+    String createConsent(User user);
 
     AliorOpenApiRequest buildOpenApiAuthTokenRequestBody(Consent consent, String requestId, String code);
 

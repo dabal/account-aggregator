@@ -18,7 +18,9 @@ import pl.dabal.accountaggregator.service.AliorOpenApiService;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -80,7 +82,7 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
                 .build();
     }
 
-    public String createConsent(@AuthenticationPrincipal User user) {
+    public String createConsent(User user) {
         String uuid = Generators.timeBasedGenerator().generate().toString();
         String state = Generators.timeBasedGenerator().generate().toString();
         Consent consent = new Consent(user, uuid, state, aliorProperties.getScopeTimeLimitInDays());
@@ -93,7 +95,7 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getAuthorizeUrl(), buildOpenApiAuthAuthorizeRequestBody(consent));
+        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getAuthorizeUrl(), buildOpenApiAuthAuthorizeRequestBody(consent),createHeaderMap(consent.getName()));
         return response.getAspspRedirectUri();
     }
 
@@ -116,7 +118,7 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getTokenUrl(), buildOpenApiAuthTokenRequestBody(consent, requestId, authCode));
+        AliorOpenApiResponse response = aliorOpenApiInvoker.invoke(aliorProperties.getTokenUrl(), buildOpenApiAuthTokenRequestBody(consent, requestId, authCode),createHeaderMap(requestId));
         consent.setAccessToken(response.getAccessToken());
         consentRepository.save(consent);
         for (PrivilegeList privilege : response.getScopeDetails().getPrivilegeList()) {
@@ -125,6 +127,19 @@ public class AliorOpenApiServiceImpl implements AliorOpenApiService {
         }
 
         return null;
+    }
+
+    private Map<String,String> createHeaderMap(String requestId){
+        Map<String,String> headersMap= new HashMap<>();
+        headersMap.put("Content-Type", "application/json");
+        headersMap.put("x-ibm-client-id", aliorProperties.getClientId());
+        headersMap.put("x-ibm-client-secret", aliorProperties.getClientSecret());
+        headersMap.put("x-jws-signature", "");
+        headersMap.put("x-request-id", requestId);
+        headersMap.put("Accept-Charset", "utf-8");
+        headersMap.put("Accept-Encoding", "deflate");
+        headersMap.put("accept", "application/json");
+return headersMap;
     }
 
 }

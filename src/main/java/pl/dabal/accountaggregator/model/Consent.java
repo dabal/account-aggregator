@@ -47,12 +47,14 @@ public class Consent {
     private String accessToken;
 
 
-    public Consent(User user, String name, String state, int scopeLimitInDays) {
+    public Consent(User user, String name, String state, Integer scopeLimitInDays) {
         this.user = user;
         this.name = name;
         this.state = state;
         this.setCreatedDate();
-        this.setScopeTimeLimit(scopeLimitInDays);
+        if(scopeLimitInDays!=null){
+        this.setScopeTimeLimit(scopeLimitInDays);}
+        else {this.setScopeTimeLimit(0);}
     }
 
     public void setCreatedDate() {
