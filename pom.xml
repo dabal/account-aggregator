@@ -19,7 +19,7 @@
     <properties>
         <java.version>11</java.version>
             <commons-lang.version>3.6</commons-lang.version>
-            <guava.version>25.0-jre</guava.version>
+            <guava.version>29.0-jre</guava.version>
         <jackson.version>2.11.0</jackson.version>
 
     </properties>
